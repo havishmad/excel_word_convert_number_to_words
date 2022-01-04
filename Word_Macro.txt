@@ -1,0 +1,27 @@
+Sub ConvertNumberToWord()
+'UpdatebyExtendoffice20181010
+    Dim xDigit As Double
+    Dim xBuff As String
+    On Error Resume Next
+    Selection.MoveLeft wdWord, 1, wdMove
+    Selection.MoveRight wdWord, 1, wdExtend
+    xDigit = Val(Trim(Selection.Text))
+    If xDigit = 0 And Str(xDigit) <> Trim(Selection.Text) Then Exit Sub
+    If xDigit > 999999 Then
+        If xDigit <= 999999999 Then
+            xBuff = Trim(Int(Str(xDigit / 1000000)))
+            Selection.Fields.Add Selection.Range, wdFieldEmpty, "= " + xBuff + " \* CardText", True
+            Selection.MoveLeft wdWord, 1, wdExtend
+            xBuff = Selection.Text & " million "
+            xDigit = Right(Str(xDigit), 6)
+        End If
+    End If
+    If xDigit <= 999999 Then
+        Selection.Fields.Add Selection.Range, wdFieldEmpty, "= " + Str(xDigit) + " \* CardText", True
+        Selection.MoveLeft wdWord, 1, wdExtend
+        xDigit = xBuff & Selection.Text
+        Selection.TypeText xDigit + " "
+    Else
+        MsgBox "Number too large", vbOKOnly, "Kutool for Word"
+    End If
+End Sub
